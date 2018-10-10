@@ -21,6 +21,7 @@ class CreateListState extends State<CreateList> {
   var _color = 'Default';
   final _controller_task = new TextEditingController();
   final _controller_sum = new TextEditingController();
+  final formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -43,10 +44,17 @@ class CreateListState extends State<CreateList> {
         label: new Text("Create",
             style: new TextStyle(fontFamily: 'Montserrat Bold')),
         onPressed: () {
-          _data.saveTitle(Holder(title_to_add, json.encode(task_list_add),
-              json.encode(sum_list_add), _color));
-          Navigator.push(
-              context, new MaterialPageRoute(builder: (context) => HomePage()));
+          final form = formKey.currentState;
+          if (form.validate()) {
+            form.save();
+            _data.saveTitle(Holder(title_to_add, json.encode(task_list_add),
+                json.encode(sum_list_add), _color));
+          /*Navigator.push(context, new MaterialPageRoute(
+            builder: (context) => new HomePage()
+          ));*/
+          //Navigator.of(context).pop(true);
+          Navigator.pushNamedAndRemoveUntil(context, '/home', ModalRoute.withName(''));
+          }
         },
       ),
       appBar: new AppBar(
@@ -131,7 +139,8 @@ class CreateListState extends State<CreateList> {
       body: new Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          new TextField(
+          /*new TextField(
+            controller: _controller_title,
             textAlign: TextAlign.center,
             style: new TextStyle(fontFamily: 'Montserrat Bold'),
             onChanged: (text) {
@@ -143,6 +152,24 @@ class CreateListState extends State<CreateList> {
                 border: InputBorder.none,
                 hintText: "Title",
                 hintStyle: new TextStyle(fontFamily: 'Montserrat Bold')),
+          ),*/
+          new Form(
+            key: formKey,
+            child: new TextFormField(
+              textAlign: TextAlign.center,
+              decoration: new InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Title',
+                hintStyle: new TextStyle(fontFamily: 'Montserrat Bold'),
+              ),
+              validator: (text) =>
+                  text.isEmpty ? 'Title can\'t be empty' : null,
+              onSaved: (text) {
+                setState(() {
+                  title_to_add = text;
+                });
+              },
+            ),
           ),
           new Container(
             height: 250.0,

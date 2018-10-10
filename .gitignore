@@ -11,3 +11,5 @@ build/
 android/key.properties
 
 android/app/key.jks
+
+android/app/android.jks

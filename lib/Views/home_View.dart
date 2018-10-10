@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'home_body.dart';
 import 'settings.dart';
 import 'New_List.dart';
+import 'dart:io';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,10 +15,22 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  BodyView body;
+
+  @override
+  void initState(){
+    super.initState();
+    body = new BodyView();
+  }
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/home' : (context) => HomePage(),
+        '/create': (context) => CreateList(),
+      },
       theme: ThemeData(
           brightness: Brightness.dark,
           fontFamily: 'Montserrat',
@@ -23,38 +39,38 @@ class HomePageState extends State<HomePage> {
           primaryColorDark: Colors.transparent),
       title: "Today List",
       home: new Scaffold(
-        appBar: new AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            centerTitle: true,
-            title: new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Image.asset('images/logo.png'),
-                new Text(
-                  "Today List",
-                  style: new TextStyle(fontFamily: 'Montserrat Bold'),
-                ),
-              ],
-            )),
-        floatingActionButton: new CreateListPush(),
-        bottomNavigationBar: new BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 6.0,
-          color: Colors.deepPurple,
-          child: new Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              SettingsPush(),
-              new IconButton(
-                  icon: new Icon(Icons.info_outline), onPressed: () {}),
-            ],
+            appBar: new AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                centerTitle: true,
+                title: new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Image.asset('images/logo.png'),
+                    new Text(
+                      "Today List",
+                      style: new TextStyle(fontFamily: 'Montserrat Bold'),
+                    ),
+                  ],
+                )),
+            floatingActionButton: new CreateListPush(),
+            bottomNavigationBar: new BottomAppBar(
+              shape: CircularNotchedRectangle(),
+              notchMargin: 6.0,
+              color: Colors.deepPurple,
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  SettingsPush(),
+                  new IconButton(
+                      icon: new Icon(Icons.info_outline), onPressed: () {}),
+                ],
+              ),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            body: body,
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: new BodyView(),
-      ),
     );
   }
 }
@@ -73,6 +89,7 @@ class SettingsPush extends StatelessWidget {
 }
 
 class CreateListPush extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return new FloatingActionButton(
@@ -81,7 +98,7 @@ class CreateListPush extends StatelessWidget {
       foregroundColor: Colors.white,
       child: Icon(Icons.add),
       onPressed: () {
-        Navigator.push(
+         Navigator.push(
             context, new MaterialPageRoute(builder: (context) => CreateList()));
       },
     );

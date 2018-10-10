@@ -23,6 +23,7 @@ class AddListState extends State<AddList> {
   List<String> task_list_add = [];
   List<String> sum_list_add = [];
   List<String> titles;
+  List<String> colors;
   List<List> tasks;
   List<List> data; 
   var _color = 'Default';
@@ -41,11 +42,14 @@ class AddListState extends State<AddList> {
     titles = new List();
     data = new List();
     tasks = new List();
+    colors = new List();
     for(int a =0; a<temp_list.length;a++){
       titles.add(temp_list[a].title);
       data.add(json.decode(temp_list[a].summaryList));
       tasks.add(json.decode(temp_list[a].taskList));
+      colors.add(temp_list[a].color);
     }
+    this._color = colors==null? 'Default': colors[index];
     print(titles);
     print(data);
     print(tasks);
@@ -68,8 +72,10 @@ class AddListState extends State<AddList> {
           }
           db.updateCurrList(title_to_add, json.encode(tasks[index]),
               json.encode(data[index]), _color);
-          Navigator.push(
-              context, new MaterialPageRoute(builder: (context) => HomePage()));
+          /*Navigator.push(context, new MaterialPageRoute(
+            builder: (context) => new HomePage()
+          ));*/
+          Navigator.pushNamedAndRemoveUntil(context, '/home', ModalRoute.withName(''));
         },
       ),
       appBar: new AppBar(
